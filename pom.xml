@@ -1,25 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.nijjwal</groupId>
-  <artifactId>SimpleMavenJunitWebApp</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>Simple Maven Junit Webapp</name>
-  <url>http://maven.apache.org</url>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  
+  <!-- Your existing configuration up to build section -->
 
   <build>
     <finalName>SimpleMavenJunitWebApp</finalName>
     <plugins>
+      <!-- Maven Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -32,6 +19,8 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      
+      <!-- Maven WAR Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -40,6 +29,8 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
+
+      <!-- Maven Failsafe Plugin for Integration Tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -53,11 +44,14 @@
           </execution>
         </executions>
       </plugin>
+      
+      <!-- Maven Antrun Plugin for Deployment -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
+          <!-- Deploy to Staging -->
           <execution>
             <id>deploy-staging</id>
             <phase>package</phase>
@@ -65,14 +59,14 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
-                <exec executable="sh">
-                  <arg value="-c"/>
-                  <arg value="deploy_to_staging.sh"/>
-                </exec>
-              </tasks>
+              <target>
+                <!-- Example: Copy WAR file to a predefined directory -->
+                <copy file="target/SimpleMavenJunitWebApp.war" todir="/opt/myapp/staging"/>
+              </target>
             </configuration>
           </execution>
+          
+          <!-- Deploy to Production -->
           <execution>
             <id>deploy-production</id>
             <phase>package</phase>
@@ -80,75 +74,17 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
-                <exec executable="sh">
-                  <arg value="-c"/>
-                  <arg value="deploy_to_production.sh"/>
-                </exec>
-              </tasks>
+              <target>
+                <!-- Example: Copy WAR file to a predefined directory -->
+                <copy file="target/SimpleMavenJunitWebApp.war" todir="/opt/myapp/production"/>
+              </target>
             </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>staging</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>deploy-staging</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <exec executable="sh">
-                      <arg value="-c"/>
-                      <arg value="deploy_to_staging.sh"/>
-                    </exec>
-                  </tasks>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>production</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>deploy-production</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <exec executable="sh">
-                      <arg value="-c"/>
-                      <arg value="deploy_to_production.sh"/>
-                    </exec>
-                  </tasks>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+  
+  <!-- Your existing profiles configuration -->
+  
 </project>
