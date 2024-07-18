@@ -18,6 +18,7 @@
   </dependencies>
 
   <build>
+    <finalName>SimpleMavenJunitWebApp</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -25,97 +26,101 @@
         <version>3.8.1</version>
         <configuration>
           <compilerArgs>
-            <args>-parameters</args>
+            <arg>-parameters</arg>
           </compilerArgs>
-
-            <source>1.8</source>
-            <target>1.8</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
-    </plugins>
-    <finalName>SimpleMavenJunitWebApp</finalName>
-  </build>
-   <profiles>
-        <profile>
-            <id>staging</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>deploy-staging</id>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>sh</executable>
-                                    <arguments>
-                                        <argument>-c</argument>
-                                        <argument>deploy_to_staging.sh</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>production</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>deploy-production</id>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>sh</executable>
-                                    <arguments>
-                                        <argument>-c</argument>
-                                        <argument>deploy_to_production.sh</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-        <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>3.4.1-SNAPSHOT</version>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>deploy-staging</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
             <configuration>
-                <webResources>
-                   <resource>
-                      <directory>WebContent</directory>
-                   </resource>
-                </webResources>
-                <useCache>false</useCache>
+              <tasks>
+                <exec executable="sh">
+                  <arg value="-c"/>
+                  <arg value="deploy_to_staging.sh"/>
+                </exec>
+              </tasks>
             </configuration>
-         </plugin>
+            <configuration>
+              <tasks>
+                <exec executable="sh">
+                  <arg value="-c"/>
+                  <arg value="deploy_to_production.sh"/>
+                </exec>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>staging</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy-staging</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <exec executable="sh">
+                      <arg value="-c"/>
+                      <arg value="deploy_to_staging.sh"/>
+                    </exec>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>production</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy-production</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <exec executable="sh">
+                      <arg value="-c"/>
+                      <arg value="deploy_to_production.sh"/>
+                    </exec>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
