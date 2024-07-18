@@ -26,7 +26,7 @@
         <version>3.8.1</version>
         <configuration>
           <compilerArgs>
-            <arg>-parameters</arg>
+            <args>-parameters</args>
           </compilerArgs>
           <source>1.8</source>
           <target>1.8</target>
@@ -34,31 +34,14 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.0.0-M5</version>
         <executions>
           <execution>
-            <id>deploy-staging</id>
-            <phase>package</phase>
             <goals>
-              <goal>run</goal>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
             </goals>
-            <configuration>
-              <tasks>
-                <exec executable="sh">
-                  <arg value="-c"/>
-                  <arg value="deploy_to_staging.sh"/>
-                </exec>
-              </tasks>
-            </configuration>
-            <configuration>
-              <tasks>
-                <exec executable="sh">
-                  <arg value="-c"/>
-                  <arg value="deploy_to_production.sh"/>
-                </exec>
-              </tasks>
-            </configuration>
           </execution>
         </executions>
       </plugin>
