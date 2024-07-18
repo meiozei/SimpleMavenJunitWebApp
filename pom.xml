@@ -1,10 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
-  <!-- Your existing configuration up to build section -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.nijjwal</groupId>
+  <artifactId>SimpleMavenJunitWebApp</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>Simple Maven Junit Webapp</name>
+  <url>http://maven.apache.org</url>
 
+  <!-- Dependencies -->
+  <dependencies>
+    <!-- JUnit for testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- Build Configuration -->
   <build>
-    <finalName>SimpleMavenJunitWebApp</finalName>
     <plugins>
       <!-- Maven Compiler Plugin -->
       <plugin>
@@ -19,33 +35,33 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      
-      <!-- Maven WAR Plugin -->
+
+      <!-- Maven Surefire Plugin for running tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.3.1</version>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
         <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <!-- Define test classes directory -->
+          <testClassesDirectory>${project.build.testOutputDirectory}</testClassesDirectory>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
         </configuration>
       </plugin>
 
-      <!-- Maven Failsafe Plugin for Integration Tests -->
+      <!-- Maven War Plugin for packaging as WAR -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0-M5</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.3</version>
+        <configuration>
+          <!-- Define the name of the final WAR file -->
+          <warName>SimpleMavenJunitWebApp</warName>
+        </configuration>
       </plugin>
-      
-      <!-- Maven Antrun Plugin for Deployment -->
+
+      <!-- Maven Antrun Plugin for deployment -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -60,7 +76,7 @@
             </goals>
             <configuration>
               <target>
-                <!-- Example: Copy WAR file to a predefined directory -->
+                <!-- Copy WAR file to local staging directory -->
                 <copy file="target/SimpleMavenJunitWebApp.war" todir="/opt/myapp/staging"/>
               </target>
             </configuration>
@@ -75,16 +91,17 @@
             </goals>
             <configuration>
               <target>
-                <!-- Example: Copy WAR file to a predefined directory -->
+                <!-- Copy WAR file to local production directory -->
                 <copy file="target/SimpleMavenJunitWebApp.war" todir="/opt/myapp/production"/>
               </target>
             </configuration>
           </execution>
         </executions>
       </plugin>
+
     </plugins>
+    
+    <!-- Define the final name of the WAR file -->
+    <finalName>SimpleMavenJunitWebApp</finalName>
   </build>
-  
-  <!-- Your existing profiles configuration -->
-  
 </project>
